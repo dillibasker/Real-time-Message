@@ -38,8 +38,9 @@ export const sendMessage = async (req, res) => {
       conversation.lastMessage = newMessage._id;
       
       // Increment unread count for recipient
-      const currentCount = conversation.unreadCount.get(recipient) || 0;
-      conversation.unreadCount.set(recipient, currentCount + 1);
+      const currentCount = conversation.unreadCount[recipient] || 0;
+conversation.unreadCount[recipient] = currentCount + 1;
+
     }
     
     await conversation.save();
@@ -91,8 +92,11 @@ export const getConversationMessages = async (req, res) => {
     });
     
     if (conversation) {
-      conversation.unreadCount.set(userId, 0);
-      await conversation.save();
+      await Conversation.findOneAndUpdate(
+        { participants: { $all: [userId, recipientId] } },
+        { $set: { [`unreadCount.${userId}`]: 0 } }
+      );
+      
     }
     
     res.status(200).json({
@@ -128,7 +132,7 @@ export const getUserConversations = async (req, res) => {
         id: conv._id,
         contact: otherParticipant,
         lastMessage: conv.lastMessage,
-        unreadCount: conv.unreadCount.get(userId) || 0,
+        unreadCount: conv.unreadCount[userId] || 0,      
         updatedAt: conv.updatedAt
       };
     });
