@@ -1,0 +1,103 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-primary: #25D366;
+  --color-primary-dark: #128C7E;
+  --color-primary-light: #DCF8C6;
+  --color-secondary: #34B7F1;
+  --color-text: #333333;
+  --color-text-secondary: #667781;
+  --color-background: #F0F2F5;
+  --color-background-light: #FFFFFF;
+  --color-border: #E1E4E7;
+}
+
+@layer base {
+  html {
+    font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
+    color: var(--color-text);
+    background-color: var(--color-background);
+    overflow-x: hidden;
+  }
+
+  body {
+    @apply h-screen;
+  }
+
+  #root {
+    @apply h-full;
+  }
+}
+
+@layer components {
+  .message-bubble {
+    @apply max-w-[70%] p-3 rounded-lg shadow-sm;
+  }
+
+  .message-sent {
+    @apply message-bubble self-end bg-[var(--color-primary-light)] text-[var(--color-text)];
+  }
+
+  .message-received {
+    @apply message-bubble self-start bg-[var(--color-background-light)] text-[var(--color-text)];
+  }
+
+  .app-button {
+    @apply bg-[var(--color-primary)] text-white px-4 py-2 rounded-md 
+      hover:bg-[var(--color-primary-dark)] transition-colors 
+      disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .input-field {
+    @apply w-full p-3 border border-[var(--color-border)] rounded-md 
+      focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] 
+      focus:border-transparent;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #bbb;
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #999;
+}
+
+/* Transitions */
+.fade-enter {
+  opacity: 0;
+}
+.fade-enter-active {
+  opacity: 1;
+  transition: opacity 200ms;
+}
+.fade-exit {
+  opacity: 1;
+}
+.fade-exit-active {
+  opacity: 0;
+  transition: opacity 200ms;
+}
+
+/* Message status animations */
+@keyframes statusPulse {
+  0% { opacity: 0.5; }
+  50% { opacity: 1; }
+  100% { opacity: 0.5; }
+}
+
+.status-sending {
+  animation: statusPulse 1.5s infinite;
+}
